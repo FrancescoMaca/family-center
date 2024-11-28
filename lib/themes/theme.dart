@@ -10,24 +10,29 @@ class AppTheme {
     appBarTheme: const AppBarTheme(
       backgroundColor: Color(0xFF837FC5),
     ),
-
-    textTheme: const TextTheme(
-      titleMedium: TextStyle(
+    
+    textTheme: TextTheme(
+      titleMedium: const TextStyle(
         fontFamily: 'Poppins',
         fontSize: 25,
         fontWeight: FontWeight.bold,
         color: Colors.black
       ),
-      titleSmall: TextStyle(
+      titleSmall: const TextStyle(
         fontFamily: 'Poppins',
         fontSize: 21,
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.normal,
         color: Colors.black
       ),
-      bodyMedium: TextStyle(
+      bodyMedium: const TextStyle(
         fontFamily: 'Poppins',
         fontSize: 15,
         color: Colors.black
+      ),
+      bodySmall: TextStyle(
+        fontFamily: 'Poppins',
+        fontSize: 12,
+        color: Colors.grey.shade900
       )
     ),
     primaryColor: const Color(0xFF9F9BE4),
@@ -51,7 +56,10 @@ class AppTheme {
       ),
       bodyMedium: lightTheme.textTheme.bodyMedium?.copyWith(
         color: Colors.white
-      )
+      ),
+      bodySmall: lightTheme.textTheme.bodySmall?.copyWith(
+        color: Colors.grey
+      ),
     ),
     primaryColor: const Color(0xFF555092),
     primaryIconTheme: const IconThemeData(

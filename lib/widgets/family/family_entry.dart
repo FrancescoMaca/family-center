@@ -24,7 +24,19 @@ class _FamilyEntryState extends State<FamilyEntry> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text('${widget.family.name}, ${widget.family.joinCode}'),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.family.name,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              Text(
+                widget.family.joinCode,
+                style: Theme.of(context).textTheme.bodySmall
+              ),
+            ]
+          ),
           IconButton(
             onPressed: () async {
               try {
@@ -35,9 +47,9 @@ class _FamilyEntryState extends State<FamilyEntry> {
                 rethrow;
               }
             },
-            icon: const Icon(
-              Icons.exit_to_app_rounded,
-              color: Colors.redAccent
+            icon: Icon(
+              Icons.settings,
+              color: Theme.of(context).primaryIconTheme.color
             ),
           )
         ],

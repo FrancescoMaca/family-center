@@ -1,46 +1,36 @@
+import 'package:family_center/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+final authServiceProvider = Provider<AuthService>((ref) => AuthService());
+
 final authProvider = StateNotifierProvider<AuthNotifier, User?>((ref) {
-  return AuthNotifier();
+  final authService = ref.watch(authServiceProvider);
+  return AuthNotifier(authService);
 });
 
 class AuthNotifier extends StateNotifier<User?> {
-  AuthNotifier() : super(null) {
+  final AuthService _authService;
+
+  AuthNotifier(this._authService) : super(null) {
     _init();
   }
 
-  final _auth = FirebaseAuth.instance;
-
   void _init() {
-    _auth.authStateChanges().listen((user) {
+    _authService.authStateChanges.listen((user) {
       state = user;
     });
   }
 
   Future<void> signIn(String email, String password) async {
-    try {
-      await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } catch (e) {
-      throw Exception('Failed to sign in: $e');
-    }
+    await _authService.signInWithEmail(email, password);
   }
 
   Future<void> signUp(String email, String password) async {
-    try {
-      await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } catch (e) {
-      throw Exception('Failed to create account: $e');
-    }
+    await _authService.signUpWithEmail(email, password);
   }
 
   Future<void> signOut() async {
-    await _auth.signOut();
+    await _authService.signOut();
   }
 }

@@ -41,65 +41,44 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile Settings'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              ref.read(authProvider.notifier).signOut();
-              Navigator.of(context).pop();
-            },
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(9999),
+                child: Image.network('https://picsum.photos/100'),
+              ),
+              Positioned(
+                right: -8,
+                bottom: -8,
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  iconSize: 16,
+                  constraints: BoxConstraints.tight(const Size(32, 32)),
+                  style: const ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll(Colors.amber),
+                  ),
+                  onPressed: () => { print('clicked edit profile')},
+                  icon: Icon(Icons.edit, color: Theme.of(context).primaryIconTheme.color)
+                )
+              )
+            ],
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Text('${_nameController.text} - ${_ageController.text}')
+          ),
+          ElevatedButton(
+            onPressed: () {},
+            child: Text(
+              'Sign out',
+              style: Theme.of(context).textTheme.bodyMedium,
+            )
+          )
         ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: 'Name',
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _ageController,
-              decoration: const InputDecoration(
-                labelText: 'Age',
-              ),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () async {
-                final user = ref.read(authProvider);
-                if (user != null) {
-                  try {
-                    await FirebaseFirestore.instance
-                        .collection('users')
-                        .doc(user.uid)
-                        .set({
-                      'name': _nameController.text,
-                      'age': int.tryParse(_ageController.text) ?? 0,
-                    }, SetOptions(merge: true));
-                    
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Profile updated successfully')),
-                    );
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Error updating profile: $e')),
-                    );
-                  }
-                }
-              },
-              child: const Text('Save Profile'),
-            ),
-          ],
-        ),
       ),
     );
   }

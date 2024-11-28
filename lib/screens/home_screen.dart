@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:family_center/models/family.dart' as models;
 import 'package:family_center/providers/family_provider.dart';
 import 'package:family_center/services/family_service.dart';
 import 'package:family_center/themes/theme.dart';
