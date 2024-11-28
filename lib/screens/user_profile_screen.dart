@@ -42,8 +42,29 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16),
+      child: ListView(
+        children: [
+          _createProfileSection(),
+          _createEntry('Privacy', Icons.privacy_tip_rounded, () {}),
+          _createEntry('Invite a Friend', Icons.offline_bolt_rounded, () {}),
+          _createEntry('Sign out', Icons.exit_to_app_rounded, () {}, Colors.redAccent),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _ageController.dispose();
+    super.dispose();
+  }
+
+  Widget _createProfileSection() {
+    return Center(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Stack(
             children: [
@@ -61,7 +82,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                   style: const ButtonStyle(
                     backgroundColor: WidgetStatePropertyAll(Colors.amber),
                   ),
-                  onPressed: () => { print('clicked edit profile')},
+                  onPressed: () => { print('clicked edit profile') },
                   icon: Icon(Icons.edit, color: Theme.of(context).primaryIconTheme.color)
                 )
               )
@@ -71,22 +92,37 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: Text('${_nameController.text} - ${_ageController.text}')
           ),
-          ElevatedButton(
-            onPressed: () {},
-            child: Text(
-              'Sign out',
-              style: Theme.of(context).textTheme.bodyMedium,
-            )
-          )
-        ],
+        ]
       ),
     );
   }
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _ageController.dispose();
-    super.dispose();
+  Widget _createEntry(String name, IconData icon, VoidCallback onClick, [Color? bgColor]) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: ElevatedButton(
+        onPressed: () {},
+        style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
+          backgroundColor: WidgetStatePropertyAll(bgColor),
+          padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(vertical: 5, horizontal: 10))
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                color: Theme.of(context).primaryIconTheme.color,
+              ),
+              const SizedBox(width: 10),
+              Text(
+                name,
+                style: Theme.of(context).textTheme.bodyMedium,
+              )
+            ],
+          ),
+        )
+      ),
+    );
   }
 }

@@ -11,23 +11,23 @@ class NotificationScreen extends StatelessWidget {
           'Notifications',
           style: Theme.of(context).textTheme.titleSmall,
         ),
+        iconTheme: IconThemeData(
+          color: Theme.of(context).appBarTheme.iconTheme?.color
+        ),
       ),
-      body: const Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               Icons.notifications_none,
               size: 64,
-              color: Colors.grey,
+              color: Theme.of(context).primaryIconTheme.color,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               'No notifications yet',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey,
-              ),
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],
         ),

@@ -8,6 +8,9 @@ class AppTheme {
     scaffoldBackgroundColor: const Color(0xFF837FC5),
     
     appBarTheme: const AppBarTheme(
+      iconTheme: IconThemeData(
+        color: Colors.black
+      ),
       backgroundColor: Color(0xFF837FC5),
     ),
     
@@ -38,6 +41,23 @@ class AppTheme {
     primaryColor: const Color(0xFF9F9BE4),
     primaryIconTheme: const IconThemeData(
       color: Colors.black
+    ),
+
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: const WidgetStatePropertyAll(Color(0xFF9F9BE4)),
+        shadowColor: const WidgetStatePropertyAll(Colors.transparent),
+        side: const WidgetStatePropertyAll(
+          BorderSide(
+            color: Color(0xFF9F9BE4),
+          )
+        ),
+        shape: WidgetStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(borderRadius)
+          )
+        )
+      )
     )
   );
 
@@ -45,6 +65,9 @@ class AppTheme {
     
     scaffoldBackgroundColor: const Color(0xFF403c75),
     appBarTheme: const AppBarTheme(
+      iconTheme: IconThemeData(
+        color: Colors.white
+      ),
       backgroundColor: Color(0xFF403c75),
     ),
     textTheme: lightTheme.textTheme.copyWith(
@@ -65,5 +88,16 @@ class AppTheme {
     primaryIconTheme: const IconThemeData(
       color: Colors.white
     ),
+
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: lightTheme.elevatedButtonTheme.style?.copyWith(
+        backgroundColor: const WidgetStatePropertyAll(Color(0xFF555092)),
+        side: const WidgetStatePropertyAll(
+          BorderSide(
+            color: Color(0xFF555092),
+          )
+        ),
+      )
+    )
   );
 }

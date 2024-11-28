@@ -91,20 +91,7 @@ class _HomeScreenState extends ConsumerState<ConsumerStatefulWidget> {
           const SizedBox(height: 30),
           ElevatedButton(
             onPressed: () => _showJoinFamilyDialog(context),
-            style: ButtonStyle(
-              backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
-              shadowColor: const WidgetStatePropertyAll(Colors.transparent),
-              side: WidgetStatePropertyAll(
-                BorderSide(
-                  color: Theme.of(context).primaryColor,
-                )
-              ),
-              shape: WidgetStatePropertyAll(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppTheme.borderRadius)
-                )
-              )
-            ),
+            style: Theme.of(context).elevatedButtonTheme.style,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
