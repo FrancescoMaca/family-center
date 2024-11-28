@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "15107123800",
+    "project_id": "family-center-6321f",
+    "storage_bucket": "family-center-6321f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:15107123800:android:91107765b63b42f9e9f82d",
+        "android_client_info": {
+          "package_name": "com.swondi.familycenter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWYVHeOzbCynYlvHkE-HMWiIBY6ZfEkiQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
