@@ -19,7 +19,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isLogin ? 'Login' : 'Sign Up'),
+        title: Text(
+          _isLogin ? 'Login' : 'Sign Up',
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -30,17 +33,28 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             children: [
               TextFormField(
                 controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  labelStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    fontSize: 15
+                  )
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';
                   }
                   return null;
                 },
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
               TextFormField(
                 controller: _passwordController,
-                decoration: const InputDecoration(labelText: 'Password'),
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  labelStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    fontSize: 15
+                  )
+                ),
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -48,31 +62,16 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   }
                   return null;
                 },
+                style: Theme.of(context).textTheme.bodyMedium
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    try {
-                      if (_isLogin) {
-                        await ref.read(authProvider.notifier).signIn(
-                          _emailController.text,
-                          _passwordController.text,
-                        );
-                      } else {
-                        await ref.read(authProvider.notifier).signUp(
-                          _emailController.text,
-                          _passwordController.text,
-                        );
-                      }
-                    } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(e.toString())),
-                      );
-                    }
-                  }
-                },
-                child: Text(_isLogin ? 'Login' : 'Sign Up'),
+                onPressed: handleLogin,
+                style: Theme.of(context).elevatedButtonTheme.style,
+                child: Text(
+                  _isLogin ? 'Log In' : 'Sign Up',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
               ),
               TextButton(
                 onPressed: () {
@@ -80,14 +79,48 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     _isLogin = !_isLogin;
                   });
                 },
-                child: Text(_isLogin
-                    ? 'Don\'t have an account? Sign Up'
-                    : 'Already have an account? Login'),
+                child: Row(
+                  children: [
+                    Text(
+                      _isLogin ? 'Don\'t have an account?' : 'Already have an account?',
+                      style: Theme.of(context).textTheme.bodyMedium
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      _isLogin ? 'Sign up!' : 'Sign in',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).highlightColor
+                      )
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void handleLogin() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        if (_isLogin) {
+          await ref.read(authProvider.notifier).signIn(
+            _emailController.text,
+            _passwordController.text,
+          );
+        } else {
+          await ref.read(authProvider.notifier).signUp(
+            _emailController.text,
+            _passwordController.text,
+          );
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString())),
+        );
+      }
+    }
   }
 }

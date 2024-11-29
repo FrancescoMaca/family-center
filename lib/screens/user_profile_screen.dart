@@ -48,7 +48,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
           _createProfileSection(),
           _createEntry('Privacy', Icons.privacy_tip_rounded, () {}),
           _createEntry('Invite a Friend', Icons.offline_bolt_rounded, () {}),
-          _createEntry('Sign out', Icons.exit_to_app_rounded, () {}, Colors.redAccent),
+          _createEntry('Sign out', Icons.exit_to_app_rounded, handleLogOut, true),
         ],
       ),
     );
@@ -97,13 +97,17 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
     );
   }
 
-  Widget _createEntry(String name, IconData icon, VoidCallback onClick, [Color? bgColor]) {
+  Widget _createEntry(String name, IconData icon, VoidCallback onClick, [bool isOutlined = false]) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: onClick,
         style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
-          backgroundColor: WidgetStatePropertyAll(bgColor),
+          backgroundColor: isOutlined ? const WidgetStatePropertyAll(Colors.transparent) : Theme.of(context).elevatedButtonTheme.style?.backgroundColor,
+          side: WidgetStatePropertyAll(BorderSide(
+            width: 3,
+            color: isOutlined ? Colors.redAccent : Colors.transparent
+          )),
           padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(vertical: 5, horizontal: 10))
         ),
         child: Padding(
@@ -112,17 +116,27 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
             children: [
               Icon(
                 icon,
-                color: Theme.of(context).primaryIconTheme.color,
+                color: isOutlined ?
+                  Colors.redAccent :
+                  Theme.of(context).primaryIconTheme.color,
               ),
               const SizedBox(width: 10),
               Text(
                 name,
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: isOutlined ?
+                    Colors.redAccent :
+                    Theme.of(context).textTheme.bodyMedium?.color
+                ),
               )
             ],
           ),
         )
       ),
     );
+  }
+
+  void handleLogOut() {
+    ref.read(authProvider.notifier).signOut();
   }
 }

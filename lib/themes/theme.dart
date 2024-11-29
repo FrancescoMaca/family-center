@@ -39,6 +39,7 @@ class AppTheme {
       )
     ),
     primaryColor: const Color(0xFF9F9BE4),
+    highlightColor: const Color(0xFFE19FFC),
     primaryIconTheme: const IconThemeData(
       color: Colors.black
     ),
@@ -57,6 +58,13 @@ class AppTheme {
             borderRadius: BorderRadius.circular(borderRadius)
           )
         )
+      )
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      labelStyle: TextStyle(
+        fontFamily: 'Poppins',
+        fontSize: 12,
+        color: Colors.grey.shade900
       )
     )
   );
@@ -85,6 +93,7 @@ class AppTheme {
       ),
     ),
     primaryColor: const Color(0xFF555092),
+    highlightColor: const Color(0xFFE19FFC),
     primaryIconTheme: const IconThemeData(
       color: Colors.white
     ),
@@ -98,6 +107,9 @@ class AppTheme {
           )
         ),
       )
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      labelStyle: lightTheme.textTheme.bodySmall
     )
   );
 }
