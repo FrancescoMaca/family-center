@@ -1,5 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:family_center/providers/auth_provider.dart';
+import 'package:family_center/providers/user_provider.dart';
+import 'package:family_center/screens/edit_personal_info_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -17,40 +19,40 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
   @override
   void initState() {
     super.initState();
-    // Load user profile data
-    _loadUserProfile();
-  }
-
-  Future<void> _loadUserProfile() async {
-    final user = ref.read(authProvider);
-    if (user != null) {
-      final doc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .get();
-      
-      if (doc.exists) {
-        final data = doc.data() as Map<String, dynamic>;
-        setState(() {
-          _nameController.text = data['name'] ?? '';
-          _ageController.text = (data['age'] ?? '').toString();
-        });
-      }
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: ListView(
-        children: [
-          _createProfileSection(),
-          _createEntry('Privacy', Icons.privacy_tip_rounded, () {}),
-          _createEntry('Invite a Friend', Icons.offline_bolt_rounded, () {}),
-          _createEntry('Sign out', Icons.exit_to_app_rounded, handleLogOut, true),
-        ],
-      ),
+    final userAsync = ref.watch(userProvider);
+
+    return userAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => Center(child: Text('Error: $error')),
+      data: (user) {
+        if (user == null) {
+          return const Center(child: Text('No user data'));
+        }
+        
+        if (_nameController.text != user.name) {
+          _nameController.text = user.name;
+        }
+
+        if (_ageController.text != user.age.toString()) {
+          _ageController.text = user.age.toString();
+        }
+        
+        return Padding(
+          padding: const EdgeInsets.all(16),
+          child: ListView(
+            children: [
+              _createProfileSection(),
+              _createEntry('Privacy', Icons.privacy_tip_rounded, () {}),
+              _createEntry('Invite a Friend', Icons.offline_bolt_rounded, () {}),
+              _createEntry('Sign out', Icons.exit_to_app_rounded, handleLogOut, true),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -70,7 +72,12 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(9999),
-                child: Image.network('https://picsum.photos/100'),
+                child: Image.asset(
+                  'assets/images/default_pfp.png',
+                  width: 80,
+                  height: 80,
+                  fit: BoxFit.cover,
+                ),
               ),
               Positioned(
                 right: -8,
@@ -82,7 +89,14 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                   style: const ButtonStyle(
                     backgroundColor: WidgetStatePropertyAll(Colors.amber),
                   ),
-                  onPressed: () => { print('clicked edit profile') },
+                  onPressed: () => {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const EditPersonalInfoScreen(),
+                      ),
+                    )
+                  },
                   icon: Icon(Icons.edit, color: Theme.of(context).primaryIconTheme.color)
                 )
               )

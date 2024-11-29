@@ -44,4 +44,27 @@ class UserNotifier extends StateNotifier<AsyncValue<FamilyUser?>> {
       rethrow;
     }
   }
+
+  Future<String> getName() async {
+    try {
+      state = const AsyncValue.loading();
+      
+      return await _userService.getName();
+    } catch (error, stack) {
+      state = AsyncValue.error(error, stack);
+      rethrow;
+    }
+  }
+
+
+  Future<String> getAge() async {
+    try {
+      state = const AsyncValue.loading();
+      
+      return await _userService.getAge();
+    } catch (error, stack) {
+      state = AsyncValue.error(error, stack);
+      rethrow;
+    }
+  }
 }

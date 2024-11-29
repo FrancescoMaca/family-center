@@ -31,4 +31,44 @@ class UserService {
       throw Exception('Failed to change name and age: $e');
     }
   }
+
+  Future<String> getName() async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(_auth.currentUser!.uid)
+        .get();
+    
+      if (!snapshot.exists) {
+        throw Exception('User does not exist');
+      }
+      
+      final userData = snapshot.data()!;
+
+      return userData['name'] as String;
+    }
+    catch (e) {
+      rethrow;
+    }
+  }
+
+    Future<String> getAge() async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(_auth.currentUser!.uid)
+        .get();
+    
+      if (!snapshot.exists) {
+        throw Exception('User does not exist');
+      }
+      
+      final userData = snapshot.data()!;
+
+      return userData['age'] as String;
+    }
+    catch (e) {
+      rethrow;
+    }
+  }
 }

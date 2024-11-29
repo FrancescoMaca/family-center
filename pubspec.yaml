@@ -46,6 +46,7 @@ dependencies:
   fancy_snackbar:
     git:
       url: https://github.com/MR0100/fancy_snackbar.git
+  firebase_storage: ^12.3.6
 
 
 dev_dependencies:
@@ -78,6 +79,7 @@ flutter:
     - assets/illustrations/family_code_dark.png
     - assets/illustrations/family.png
     - assets/illustrations/family_dark.png
+    - assets/images/default_pfp.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
