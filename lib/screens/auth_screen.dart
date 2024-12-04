@@ -33,6 +33,12 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             children: [
               TextFormField(
                 controller: _emailController,
+                onTapOutside: (e) => FocusScope.of(context).unfocus(),
+                keyboardAppearance: MediaQuery.of(context).platformBrightness,
+                keyboardType: TextInputType.emailAddress,
+                autocorrect: false,
+                enableSuggestions: true,
+                autofillHints: const [ AutofillHints.email ],
                 decoration: InputDecoration(
                   labelText: 'Email',
                   labelStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -49,6 +55,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               ),
               TextFormField(
                 controller: _passwordController,
+                onTapOutside: (e) => FocusScope.of(context).unfocus(),
+                keyboardAppearance: MediaQuery.of(context).platformBrightness,
+                autocorrect: false,
+                autofillHints: [ _isLogin ? AutofillHints.password : AutofillHints.newPassword ],
                 decoration: InputDecoration(
                   labelText: 'Password',
                   labelStyle: Theme.of(context).textTheme.bodySmall?.copyWith(

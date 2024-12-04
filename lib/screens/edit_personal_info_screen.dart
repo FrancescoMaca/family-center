@@ -18,7 +18,17 @@ class _EditPersonalInfoScreenState extends State<EditPersonalInfoScreen> {
           style: Theme.of(context).textTheme.titleSmall
         ),
         backgroundColor: Colors.transparent,
-      )
+      ),
+      body: const Column(
+        children: [
+          TextField(
+
+          ),
+          TextField(
+
+          ),
+        ],
+      ),
     );
   }
 }
