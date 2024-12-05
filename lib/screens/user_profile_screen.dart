@@ -1,5 +1,4 @@
 
-import 'package:family_center/models/family_user.dart';
 import 'package:family_center/providers/auth_provider.dart';
 import 'package:family_center/providers/user_provider.dart';
 import 'package:family_center/screens/edit_personal_info_screen.dart';

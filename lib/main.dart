@@ -1,5 +1,6 @@
 import 'package:family_center/extensions/theme_ext.dart';
 import 'package:family_center/providers/auth_provider.dart';
+import 'package:family_center/providers/user_provider.dart';
 import 'package:family_center/screen_manager.dart';
 import 'package:family_center/screens/auth_screen.dart';
 import 'package:family_center/themes/theme.dart';
@@ -20,6 +21,11 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authProvider);
+    final hasUserInfo = ref.watch(userProvider);
+
+    if (!hasUserInfo.isLoading) {
+      print(hasUserInfo.value);
+    }
 
     return MaterialApp(
       title: 'Family Center',
