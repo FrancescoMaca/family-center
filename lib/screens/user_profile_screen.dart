@@ -1,4 +1,5 @@
 
+import 'package:family_center/models/family_user.dart';
 import 'package:family_center/providers/auth_provider.dart';
 import 'package:family_center/providers/user_provider.dart';
 import 'package:family_center/screens/edit_personal_info_screen.dart';
@@ -29,17 +30,11 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stack) => Center(child: Text('Error: $error')),
       data: (user) {
-        if (user == null) {
-          return const Center(child: Text('No user data'));
-        }
+        String userName = user?.name ?? "No Data";
+        String userAge = user?.age.toString() ?? "No data";
         
-        if (_nameController.text != user.name) {
-          _nameController.text = user.name;
-        }
-
-        if (_ageController.text != user.age.toString()) {
-          _ageController.text = user.age.toString();
-        }
+        _nameController.text = userName;
+        _ageController.text = userAge;
         
         return Padding(
           padding: const EdgeInsets.all(16),

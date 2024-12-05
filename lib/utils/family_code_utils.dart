@@ -5,5 +5,5 @@ bool isFamilyCodeValid(String? value) {
     return false;
   }
 
-  return value.length == 5 && RegExp(r'^[0-9]{5}$').hasMatch(value);
+  return value.length == 6 && RegExp(r'^[0-9A-Z]{6}$').hasMatch(value);
 } 

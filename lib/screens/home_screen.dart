@@ -55,7 +55,12 @@ class _HomeScreenState extends ConsumerState<ConsumerStatefulWidget> {
           },
         );
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => Center(
+        child: Text(
+          "Loading family members...",
+          style: Theme.of(context).textTheme.bodyMedium,
+        )
+      ),
       error: (error, stack) => Center(child: Text('Error: $error')),
     );
   }
@@ -159,10 +164,12 @@ class _HomeScreenState extends ConsumerState<ConsumerStatefulWidget> {
             child: PinCodeTextField(
               controller: codeController,
               beforeTextPaste: (_) => false,
-              length: 5,
+              length: 6,
               autoFocus: true,
               appContext: context,
               useHapticFeedback: true,
+              autoDismissKeyboard: false,
+              autoUnfocus: false,
               hapticFeedbackTypes: HapticFeedbackTypes.light,
               animationType: AnimationType.scale,
               backgroundColor: Colors.transparent,
@@ -188,12 +195,22 @@ class _HomeScreenState extends ConsumerState<ConsumerStatefulWidget> {
                 return const SizedBox();
               }
 
-              if (snapshot.data == null || snapshot.data?.text == null || !isFamilyCodeValid(snapshot.data?.text)) {
-                return const SizedBox();
-              }
-
               return ElevatedButton(
-                onPressed: () => codeController.text = snapshot.data!.text!,
+                onPressed: () {
+                  if (snapshot.data == null || snapshot.data?.text == null || !isFamilyCodeValid(snapshot.data?.text)) {
+                    FancySnackbar.showSnackbar(
+                      context,
+                      snackBarType: FancySnackBarType.warning,
+                      color: SnackBarColors.warning2,
+                      title: "Error",
+                      messageWidget: const Text("The clipboard does not contain a valid code format."),
+                      duration: 3,
+                    );
+                  }
+                  else {
+                    codeController.text = snapshot.data!.text!;
+                  }
+                },
                 style: ButtonStyle(
                   backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
                   shadowColor: const WidgetStatePropertyAll(Colors.transparent),
@@ -240,48 +257,54 @@ class _HomeScreenState extends ConsumerState<ConsumerStatefulWidget> {
       showCancelBtn: false,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       customAsset: 'assets/illustrations/family${MediaQuery.platformBrightnessOf(context) == Brightness.light ? '' : '_dark'}.png',
-      headerBackgroundColor:Theme.of(context).primaryColor,
-      widget: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 50, 0, 20),
-            child: TextField(
-              controller: nameController,
-              keyboardType: TextInputType.text,
-              keyboardAppearance: MediaQuery.platformBrightnessOf(context),
-              onChanged: (code) => nameController.text = code,
-              style: Theme.of(context).textTheme.bodyMedium,
-              decoration: InputDecoration(
-                hintText: 'Enter family name',
-                hintStyle: Theme.of(context).textTheme.bodyMedium,
+      headerBackgroundColor: Theme.of(context).primaryColor,
+      widget: Builder(
+        builder: (context) {
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 50, 0, 20),
+                child: TextField(
+                  controller: nameController,
+                  keyboardType: TextInputType.text,
+                  textCapitalization: TextCapitalization.words,
+                  keyboardAppearance: MediaQuery.platformBrightnessOf(context),
+                  onTapOutside: (e) => FocusScope.of(context).unfocus(),
+                  onChanged: (code) => nameController.text = code,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  decoration: InputDecoration(
+                    hintText: 'Enter family name',
+                    hintStyle: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ),
               ),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () => {
-              _handleCreateFamily(nameController.text),
-              Navigator.pop(context)
-            },
-            style: ButtonStyle(
-              backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
-              shadowColor: const WidgetStatePropertyAll(Colors.transparent),
-              side: const WidgetStatePropertyAll(
-                BorderSide(
-                  width: 0,
-                )
-              ),
-              shape: WidgetStatePropertyAll(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppTheme.borderRadius)
+              ElevatedButton(
+                onPressed: () => {
+                  _handleCreateFamily(nameController.text),
+                  Navigator.pop(context)
+                },
+                style: ButtonStyle(
+                  backgroundColor: WidgetStatePropertyAll(Theme.of(context).primaryColor),
+                  shadowColor: const WidgetStatePropertyAll(Colors.transparent),
+                  side: const WidgetStatePropertyAll(
+                    BorderSide(
+                      width: 0,
+                    )
+                  ),
+                  shape: WidgetStatePropertyAll(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppTheme.borderRadius)
+                    )
+                  )
+                ),
+                child: Text(
+                  'Create',
+                  style: Theme.of(context).textTheme.bodyMedium,
                 )
               )
-            ),
-            child: Text(
-              'Create',
-              style: Theme.of(context).textTheme.bodyMedium,
-            )
-          )
-        ]
+            ]
+          );
+        }
       )
     );
   }

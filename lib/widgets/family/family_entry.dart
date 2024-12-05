@@ -1,8 +1,8 @@
 
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:family_center/models/family.dart';
-import 'package:family_center/services/family_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:family_center/models/family_user.dart';
 import 'package:flutter/material.dart';
 
 class FamilyEntry extends StatefulWidget {
@@ -15,45 +15,123 @@ class FamilyEntry extends StatefulWidget {
 }
 
 class _FamilyEntryState extends State<FamilyEntry> {
-  final FamilyService familyService = FamilyService();
+  bool isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.family.name,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              Text(
-                widget.family.joinCode,
-                style: Theme.of(context).textTheme.bodySmall
-              ),
-            ]
+    return Column(
+      children: [
+        InkWell(
+          onTap: () => setState(() => isExpanded = !isExpanded),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.family.name,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    Text(
+                      widget.family.joinCode,
+                      style: Theme.of(context).textTheme.bodySmall
+                    ),
+                  ]
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      isExpanded ? Icons.expand_less : Icons.expand_more,
+                      color: Theme.of(context).primaryIconTheme.color
+                    ),
+                    IconButton(
+                      onPressed: () async { },
+                      icon: Icon(
+                        Icons.settings,
+                        color: Theme.of(context).primaryIconTheme.color
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            )
           ),
-          IconButton(
-            onPressed: () async {
-              try {
-                final String userId = FirebaseAuth.instance.currentUser!.uid;
-                await familyService.leaveFamily(widget.family.joinCode, userId);
-              }
-              catch(e) {
-                rethrow;
-              }
+        ),
+        if (isExpanded)
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: widget.family.memberIds.length,
+            itemBuilder: (context, index) {
+              final userId = widget.family.memberIds[index];
+              return FutureBuilder(
+                future: FirebaseFirestore.instance.collection('users').doc(userId).get(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  }
+                  
+                  if (!snapshot.hasData || snapshot.data?.data() == null) {
+                    return const Center(
+                      child: Text('No user data found'),
+                    );
+                  }
+
+                  final user = FamilyUser.fromMap(snapshot.data!.data()!);
+                  return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          user.name,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        Container(
+                          padding: EdgeInsets.zero,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Theme.of(context).primaryIconTheme.color ?? Colors.green,
+                              width: 1
+                            ),
+                            borderRadius: BorderRadius.circular(20)
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                onPressed: () {},
+                                icon: const Icon(
+                                  Icons.remove_circle_outline,
+                                  color: Colors.redAccent,
+                                )
+                              ),
+                              IconButton(
+                                onPressed: () {},
+                                icon: Icon(
+                                  Icons.edit_outlined,
+                                  color: Theme.of(context).primaryIconTheme.color,
+                                )
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                },
+              );
             },
-            icon: Icon(
-              Icons.settings,
-              color: Theme.of(context).primaryIconTheme.color
-            ),
           )
-        ],
-      )
+      ],
     );
   }
 }

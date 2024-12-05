@@ -1,4 +1,7 @@
 import 'package:family_center/providers/auth_provider.dart';
+import 'package:family_center/utils/auth_error_notification.dart';
+import 'package:fancy_snackbar/fancy_snackbar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,7 +23,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          _isLogin ? 'Login' : 'Sign Up',
+          _isLogin ? 'Sign In' : 'Sign Up',
           style: Theme.of(context).textTheme.titleMedium,
         ),
       ),
@@ -34,7 +37,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               TextFormField(
                 controller: _emailController,
                 onTapOutside: (e) => FocusScope.of(context).unfocus(),
-                keyboardAppearance: MediaQuery.of(context).platformBrightness,
+                keyboardAppearance: MediaQuery.platformBrightnessOf(context),
                 keyboardType: TextInputType.emailAddress,
                 autocorrect: false,
                 enableSuggestions: true,
@@ -56,7 +59,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               TextFormField(
                 controller: _passwordController,
                 onTapOutside: (e) => FocusScope.of(context).unfocus(),
-                keyboardAppearance: MediaQuery.of(context).platformBrightness,
+                keyboardAppearance: MediaQuery.platformBrightnessOf(context),
                 autocorrect: false,
                 autofillHints: [ _isLogin ? AutofillHints.password : AutofillHints.newPassword ],
                 decoration: InputDecoration(
@@ -111,7 +114,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       ),
     );
   }
-
   void handleLogin() async {
     if (_formKey.currentState!.validate()) {
       try {
@@ -127,9 +129,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           );
         }
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),
-        );
+        showSignInError(context, e);
       }
     }
   }

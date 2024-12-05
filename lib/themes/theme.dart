@@ -6,7 +6,6 @@ class AppTheme {
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
     scaffoldBackgroundColor: const Color(0xFF837FC5),
-    
     appBarTheme: const AppBarTheme(
       iconTheme: IconThemeData(
         color: Colors.black
