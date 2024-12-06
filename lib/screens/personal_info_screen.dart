@@ -44,19 +44,6 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
           "One more step...",
           style: Theme.of(context).textTheme.titleMedium,
         ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (ctx) => const AuthScreen()
-              )
-            );
-          },
-          icon: Icon(
-            Icons.arrow_back_ios_sharp,
-            color: Theme.of(context).primaryIconTheme.color
-          )
-        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -188,7 +175,6 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
                           name: name,
                           age: age
                         );
-
                         try {
                           final userNotifier = ref.read(userProvider.notifier);
 

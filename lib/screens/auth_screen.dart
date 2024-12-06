@@ -1,5 +1,6 @@
 import 'package:family_center/providers/auth_provider.dart';
 import 'package:family_center/utils/auth_error_notification.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -32,6 +33,24 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      _emailController.text = "francescomaca93@gmail.com";
+                      _passwordController.text = "Francesco2002"; // Fake pass dont try to use it :D
+                    },
+                    icon: Icon(Icons.verified_sharp, color: Theme.of(context).primaryIconTheme.color)
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      _emailController.text = "frankymacaspam@gmail.com";
+                      _passwordController.text = "Francesco2002"; // Fake pass dont try to use it :D
+                    },
+                    icon: Icon(Icons.dangerous, color: Theme.of(context).primaryIconTheme.color)
+                  ),
+                ],
+              ),
               TextFormField(
                 controller: _emailController,
                 onTapOutside: (e) => FocusScope.of(context).unfocus(),
@@ -112,14 +131,17 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       ),
     );
   }
+
   void handleLogin() async {
     if (_formKey.currentState!.validate()) {
       try {
         if (_isLogin) {
+          print('Loggin with creds: ${_emailController.text} ${_passwordController.text}, ${FirebaseAuth.instance.currentUser}');
           await ref.read(authProvider.notifier).signIn(
             _emailController.text,
             _passwordController.text,
           );
+
         } else {
           await ref.read(authProvider.notifier).signUp(
             _emailController.text,

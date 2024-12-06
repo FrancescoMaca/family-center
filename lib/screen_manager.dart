@@ -32,6 +32,9 @@ class _ScreenManagerState extends ConsumerState<ConsumerStatefulWidget> {
     final user = ref.watch(authProvider);
     final userData = ref.watch(userProvider);
 
+    print('Auth State: ${user?.email}');
+    print('User Data: ${userData.value?.name}');
+
     if (user == null) {
       return const AuthScreen();
     }
@@ -55,8 +58,8 @@ class _ScreenManagerState extends ConsumerState<ConsumerStatefulWidget> {
       animationCurve: Curves.elasticOut,
       animationDuration: const Duration(milliseconds: 500),
       items: [
-        Icon(Icons.groups_3_rounded, color: Theme.of(context).primaryColor), //Color(0xFF403c75)
-        Icon(Icons.account_circle_rounded, color: Theme.of(context).primaryColor), //Color(0xFF403c75)
+        Icon(Icons.groups_3_rounded, color: Theme.of(context).primaryColor),
+        Icon(Icons.account_circle_rounded, color: Theme.of(context).primaryColor),
         Icon(Icons.settings, color: Theme.of(context).primaryColor),
       ],
       onTap: (index) => {

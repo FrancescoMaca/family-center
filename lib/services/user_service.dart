@@ -17,7 +17,7 @@ class UserService {
       );
   }
 
-  Future<void> changeNameAndAge(String name, String age) async {
+  Future<void> changeNameAndAge(String name, int age) async {
     if (_auth.currentUser == null) {
       throw Exception('Operation not permitted');
     }
@@ -25,7 +25,7 @@ class UserService {
     await FirebaseFirestore.instance
       .collection('users')
       .doc(_auth.currentUser!.uid)
-      .update({ 'name': name, 'age': age });
+      .set({ 'name': name, 'age': age }, SetOptions(merge: true));
   }
 
   Future<String> getName() async {

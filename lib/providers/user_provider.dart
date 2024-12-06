@@ -38,7 +38,7 @@ class UserNotifier extends StateNotifier<AsyncValue<FamilyUser?>> {
     );
   }
 
-  Future<void> updateNameAndAge(String name, String age) async {
+  Future<void> updateNameAndAge(String name, int age) async {
     try {
       state = const AsyncValue.loading();
       
@@ -74,7 +74,7 @@ class UserNotifier extends StateNotifier<AsyncValue<FamilyUser?>> {
   }
 
   Future<void> saveNewUser(FamilyUser user) async {
-    await _userService.changeNameAndAge(user.name, user.age.toString());
+    await _userService.changeNameAndAge(user.name, user.age);
   }
 
   @override
