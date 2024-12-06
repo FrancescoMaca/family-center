@@ -1,20 +1,26 @@
 
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:family_center/providers/auth_provider.dart';
+import 'package:family_center/providers/user_provider.dart';
+import 'package:family_center/screens/auth_screen.dart';
 import 'package:family_center/screens/home_screen.dart';
+import 'package:family_center/screens/personal_info_screen.dart';
 import 'package:family_center/screens/settings_screen.dart';
 import 'package:family_center/screens/user_profile_screen.dart';
 import 'package:family_center/widgets/layout/app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ScreenManager extends StatefulWidget {
+class ScreenManager extends ConsumerStatefulWidget {
   const ScreenManager({super.key});
 
   @override
-  State<ScreenManager> createState() => _ScreenManagerState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ScreenManagerState();
 }
 
-class _ScreenManagerState extends State<ScreenManager> {
+class _ScreenManagerState extends ConsumerState<ConsumerStatefulWidget> {
   int _currentScreen = 0;
+  
   final List<Widget> navigationScreens = [
     const HomeScreen(),
     const UserProfileScreen(),
@@ -23,6 +29,17 @@ class _ScreenManagerState extends State<ScreenManager> {
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(authProvider);
+    final userData = ref.watch(userProvider);
+
+    if (user == null) {
+      return const AuthScreen();
+    }
+
+    if (userData.value == null) {
+      return const PersonalInfoScreen();
+    }
+
     return Scaffold(
       appBar: const FCAppBar(),
       extendBodyBehindAppBar: true,

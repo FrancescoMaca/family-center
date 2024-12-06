@@ -80,7 +80,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 onPressed: handleLogin,
                 style: Theme.of(context).elevatedButtonTheme.style,
                 child: Text(
-                  _isLogin ? 'Log In' : 'Sign Up',
+                  _isLogin ? 'Sign In' : 'Sign Up',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
@@ -125,7 +125,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             _emailController.text,
             _passwordController.text,
           );
-          
         }
       } catch (e) {
         showSignInError(context, e);

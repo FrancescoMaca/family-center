@@ -5,14 +5,14 @@ class AppTheme {
 
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
+    brightness: Brightness.light,
     scaffoldBackgroundColor: const Color(0xFF837FC5),
     appBarTheme: const AppBarTheme(
       iconTheme: IconThemeData(
         color: Colors.black
       ),
       backgroundColor: Color(0xFF837FC5),
-    ),
-    
+    ),    
     textTheme: TextTheme(
       titleMedium: const TextStyle(
         fontFamily: 'Poppins',
@@ -69,7 +69,7 @@ class AppTheme {
   );
 
   static ThemeData darkTheme = lightTheme.copyWith(
-    
+    brightness: Brightness.dark,
     scaffoldBackgroundColor: const Color(0xFF403c75),
     appBarTheme: const AppBarTheme(
       iconTheme: IconThemeData(

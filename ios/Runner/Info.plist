@@ -49,5 +49,12 @@
 	<string>We need access to paste to allow you to paste text into text fields.</string>
 	<key>NSPasteboardUsageDescription</key>
 	<string>We need access to paste to allow you to paste text into text fields.</string>
+
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need access your gallery in order to allow you to upload a photo.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>We need access the camera if you want to take a selfie or a photo.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We need access to the microphone in case of you recording videos.</string>
 </dict>
 </plist>

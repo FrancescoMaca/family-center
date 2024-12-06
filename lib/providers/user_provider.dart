@@ -73,6 +73,10 @@ class UserNotifier extends StateNotifier<AsyncValue<FamilyUser?>> {
     }
   }
 
+  Future<void> saveNewUser(FamilyUser user) async {
+    await _userService.changeNameAndAge(user.name, user.age.toString());
+  }
+
   @override
   void dispose() {
     _userSubscriptions?.cancel();
