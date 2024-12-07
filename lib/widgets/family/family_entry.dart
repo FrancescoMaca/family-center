@@ -1,20 +1,23 @@
 
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:family_center/models/family.dart';
+import 'package:family_center/models/family.dart' as fc;
 import 'package:family_center/models/family_user.dart';
+import 'package:family_center/providers/family_provider.dart';
+import 'package:family_center/widgets/family/family_member_entry.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class FamilyEntry extends StatefulWidget {
-  final Family family;
+class FamilyEntry extends ConsumerStatefulWidget {
+  final fc.Family family;
 
   const FamilyEntry({super.key, required this.family});
 
   @override
-  State<FamilyEntry> createState() => _FamilyEntryState();
+  ConsumerState<FamilyEntry> createState() => _FamilyEntryState();
 }
 
-class _FamilyEntryState extends State<FamilyEntry> {
+class _FamilyEntryState extends ConsumerState<FamilyEntry> {
   bool isExpanded = false;
 
   @override
@@ -54,6 +57,16 @@ class _FamilyEntryState extends State<FamilyEntry> {
                         color: Theme.of(context).primaryIconTheme.color
                       ),
                     ),
+                    IconButton(
+                      onPressed: () async {
+                        final familyProvider = ref.read(familyServiceProvider);
+                        familyProvider.leaveFamily(widget.family.joinCode);
+                      },
+                      icon: Icon(
+                        Icons.exit_to_app,
+                        color: Theme.of(context).primaryIconTheme.color
+                      ),
+                    ),
                   ],
                 )
               ],
@@ -86,47 +99,7 @@ class _FamilyEntryState extends State<FamilyEntry> {
                   }
 
                   final user = FamilyUser.fromMap(snapshot.data!.data()!);
-                  return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 40),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          user.name,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                        Container(
-                          padding: EdgeInsets.zero,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Theme.of(context).primaryIconTheme.color ?? Colors.green,
-                              width: 1
-                            ),
-                            borderRadius: BorderRadius.circular(20)
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                onPressed: () {},
-                                icon: const Icon(
-                                  Icons.remove_circle_outline,
-                                  color: Colors.redAccent,
-                                )
-                              ),
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.edit_outlined,
-                                  color: Theme.of(context).primaryIconTheme.color,
-                                )
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  );
+                  return FamilyUserEntry(user: user);
                 },
               );
             },

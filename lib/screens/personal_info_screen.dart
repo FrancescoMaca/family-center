@@ -1,7 +1,6 @@
 import 'package:family_center/models/family_user.dart';
 import 'package:family_center/providers/auth_provider.dart';
 import 'package:family_center/providers/user_provider.dart';
-import 'package:family_center/screens/auth_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

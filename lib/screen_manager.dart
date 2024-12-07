@@ -32,14 +32,17 @@ class _ScreenManagerState extends ConsumerState<ConsumerStatefulWidget> {
     final user = ref.watch(authProvider);
     final userData = ref.watch(userProvider);
 
-    print('Auth State: ${user?.email}');
-    print('User Data: ${userData.value?.name}');
-
     if (user == null) {
+      setState(() {
+        _currentScreen = 0;
+      });
       return const AuthScreen();
     }
 
     if (userData.value == null) {
+      setState(() {
+        _currentScreen = 0;
+      });
       return const PersonalInfoScreen();
     }
 

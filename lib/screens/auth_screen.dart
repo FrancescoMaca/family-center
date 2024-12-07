@@ -1,6 +1,5 @@
 import 'package:family_center/providers/auth_provider.dart';
 import 'package:family_center/utils/auth_error_notification.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -136,12 +135,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     if (_formKey.currentState!.validate()) {
       try {
         if (_isLogin) {
-          print('Loggin with creds: ${_emailController.text} ${_passwordController.text}, ${FirebaseAuth.instance.currentUser}');
           await ref.read(authProvider.notifier).signIn(
             _emailController.text,
             _passwordController.text,
           );
-
         } else {
           await ref.read(authProvider.notifier).signUp(
             _emailController.text,
