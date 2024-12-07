@@ -7,14 +7,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 class FamilyService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  String generateJoinCode() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  String _generateJoinCode() {
+    const chars = '0123456789';
     final random = Random();
     return List.generate(6, (index) => chars[random.nextInt(chars.length)]).join();
   }
 
   Future<void> createFamily(String name, String userId) async {
-    final joinCode = generateJoinCode();
+    final joinCode = _generateJoinCode();
     final familyRef = _firestore.collection('families').doc();
     
     final family = Family(
@@ -33,6 +33,8 @@ class FamilyService {
   }
 
   Future<void> joinFamily(String joinCode, String userId) async {
+
+    // Fetches a family with the given code
     final querySnapshot = await _firestore
         .collection('families')
         .where('joinCode', isEqualTo: joinCode)
@@ -43,6 +45,14 @@ class FamilyService {
     }
 
     final familyDoc = querySnapshot.docs.first;
+
+    // Check if the family is full, if so, throws exception
+    final familyData = familyDoc.data();
+    if (List<String>.from(familyData['memberIds']).length == Family.memberLimit) {
+      throw Exception("Family is full");
+    }
+
+    // Adds the current user's id to the list and adds the family id to the user's family list
     await familyDoc.reference.update({
       'memberIds': FieldValue.arrayUnion([userId])
     });

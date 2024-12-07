@@ -97,9 +97,13 @@ class _FamilyEntryState extends ConsumerState<FamilyEntry> {
                       child: Text('No user data found'),
                     );
                   }
-
                   final user = FamilyUser.fromMap(snapshot.data!.data()!);
-                  return FamilyUserEntry(user: user);
+
+                  return FamilyUserEntry(
+                    user: user,
+                    isOwner: widget.family.ownerId == snapshot.data!.id,
+                    isMod: widget.family.moderatorsIds.contains(snapshot.data!.id),
+                  );
                 },
               );
             },

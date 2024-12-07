@@ -332,6 +332,9 @@ class _HomeScreenState extends ConsumerState<ConsumerStatefulWidget> {
       if (e.toString().contains('Family not found')) {
         _showAlertFamilyCodeFailiure('Family code was not found!');
       }
+      if (e.toString().contains('Family is full')) {
+        _showAlertFamilyCodeFailiure('Family is full!');
+      }
     }
   }
 

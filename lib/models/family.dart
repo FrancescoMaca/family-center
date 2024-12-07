@@ -4,6 +4,7 @@ class Family {
   final String name;
   final String joinCode;
   final List<String> memberIds;
+  static const int memberLimit = 10;
   final String ownerId;
   final List<String> moderatorsIds;
 
