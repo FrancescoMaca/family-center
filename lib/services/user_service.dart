@@ -12,7 +12,7 @@ class UserService {
       .snapshots()
       .map((snapshot) => 
         snapshot.exists ?
-          FamilyUser.fromMap(snapshot.data()!) :
+          FamilyUser.fromDoc(snapshot) :
           null
       );
   }
@@ -48,7 +48,7 @@ class UserService {
     }
   }
 
-    Future<String> getAge() async {
+  Future<String> getAge() async {
     try {
       final snapshot = await FirebaseFirestore.instance
         .collection('users')

@@ -4,6 +4,12 @@ import 'dart:math';
 import 'package:family_center/models/family.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+enum FamilyRole {
+  member,
+  moderator,
+  owner,
+}
+
 class FamilyService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -112,5 +118,29 @@ class FamilyService {
     } catch (e) {
       throw Exception('Failed to leave family: ${e.toString()}');
     }
+  }
+
+  Future<FamilyRole> getCurrentUserRole(String familyId) async {
+    final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+    
+    final doc = await _firestore
+      .collection('families')
+      .doc(familyId)
+      .get();
+      
+    if (!doc.exists) return FamilyRole.member;
+    
+    final data = doc.data()!;
+    
+    if (data['ownerId'] == currentUserId) {
+      return FamilyRole.owner;
+    }
+    
+    final List<String> modIds = List<String>.from(data['moderatorsIds'] ?? []);
+    if (modIds.contains(currentUserId)) {
+      return FamilyRole.moderator;
+    }
+    
+    return FamilyRole.member;
   }
 }

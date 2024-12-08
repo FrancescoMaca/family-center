@@ -1,4 +1,6 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class FamilyUser {
   final String id;
   final String name;
@@ -21,9 +23,11 @@ class FamilyUser {
     };
   }
 
-  factory FamilyUser.fromMap(Map<String, dynamic> map) {
+  factory FamilyUser.fromDoc(DocumentSnapshot snap) {
+    final map = snap.data() as Map<String, dynamic>;
+
     return FamilyUser(
-      id: map['id'] ?? '',
+      id: snap.id,
       name: map['name'] ?? '',
       age: map['age'] ?? 0,
       familyIds: List<String>.from(map['familyIds'] ?? []),

@@ -1,9 +1,9 @@
 
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:family_center/models/family.dart' as fc;
 import 'package:family_center/models/family_user.dart';
 import 'package:family_center/providers/family_provider.dart';
+import 'package:family_center/services/family_service.dart';
 import 'package:family_center/widgets/family/family_member_entry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -62,9 +62,9 @@ class _FamilyEntryState extends ConsumerState<FamilyEntry> {
                         final familyProvider = ref.read(familyServiceProvider);
                         familyProvider.leaveFamily(widget.family.joinCode);
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.exit_to_app,
-                        color: Theme.of(context).primaryIconTheme.color
+                        color: Colors.redAccent
                       ),
                     ),
                   ],
@@ -80,9 +80,15 @@ class _FamilyEntryState extends ConsumerState<FamilyEntry> {
             itemCount: widget.family.memberIds.length,
             itemBuilder: (context, index) {
               final userId = widget.family.memberIds[index];
+              final familyService = ref.watch(familyServiceProvider);
+
               return FutureBuilder(
-                future: FirebaseFirestore.instance.collection('users').doc(userId).get(),
+                future: Future.wait([
+                  FirebaseFirestore.instance.collection('users').doc(userId).get(),
+                  familyService.getCurrentUserRole(widget.family.id)
+                ]),
                 builder: (context, snapshot) {
+                  
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
                       child: Padding(
@@ -91,18 +97,23 @@ class _FamilyEntryState extends ConsumerState<FamilyEntry> {
                       ),
                     );
                   }
-                  
-                  if (!snapshot.hasData || snapshot.data?.data() == null) {
+
+                  final userSnapshot = snapshot.data![0] as DocumentSnapshot;
+                  final currentUserRoleSnapshop = snapshot.data![1] as FamilyRole;
+
+                  if (!snapshot.hasData || userSnapshot.data() == null) {
                     return const Center(
                       child: Text('No user data found'),
                     );
                   }
-                  final user = FamilyUser.fromMap(snapshot.data!.data()!);
+
+                  final user = FamilyUser.fromDoc(userSnapshot);
 
                   return FamilyUserEntry(
                     user: user,
-                    isOwner: widget.family.ownerId == snapshot.data!.id,
-                    isMod: widget.family.moderatorsIds.contains(snapshot.data!.id),
+                    isOwner: widget.family.ownerId == user.id,
+                    isMod: widget.family.moderatorsIds.contains(user.id),
+                    currentUserRole: currentUserRoleSnapshop,
                   );
                 },
               );

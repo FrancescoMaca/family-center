@@ -56,5 +56,18 @@
 	<string>We need access the camera if you want to take a selfie or a photo.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We need access to the microphone in case of you recording videos.</string>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>action_one</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Action One</string>
+			<key>UIApplicationShortcutItemSubtitle</key>
+			<string>Optional subtitle</string>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeHome</string>
+		</dict>
+	</array>
 </dict>
 </plist>
