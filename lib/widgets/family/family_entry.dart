@@ -20,11 +20,22 @@ class FamilyEntry extends ConsumerStatefulWidget {
 class _FamilyEntryState extends ConsumerState<FamilyEntry> {
   bool isExpanded = false;
 
+  final Map<String, Future<List<dynamic>>> _userAsyncData = {};
+
+  @override
+  void initState() {
+    super.initState();
+
+    _prefetchUserData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         InkWell(
+          highlightColor: Colors.transparent,
+          splashColor: Theme.of(context).highlightColor.withAlpha(100),
           onTap: () => setState(() => isExpanded = !isExpanded),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -80,13 +91,9 @@ class _FamilyEntryState extends ConsumerState<FamilyEntry> {
             itemCount: widget.family.memberIds.length,
             itemBuilder: (context, index) {
               final userId = widget.family.memberIds[index];
-              final familyService = ref.watch(familyServiceProvider);
 
               return FutureBuilder(
-                future: Future.wait([
-                  FirebaseFirestore.instance.collection('users').doc(userId).get(),
-                  familyService.getCurrentUserRole(widget.family.id)
-                ]),
+                future: _userAsyncData[userId],
                 builder: (context, snapshot) {
                   
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -121,5 +128,16 @@ class _FamilyEntryState extends ConsumerState<FamilyEntry> {
           )
       ],
     );
+  }
+
+  void _prefetchUserData() async {
+    final familyService = ref.read(familyServiceProvider);
+
+    for (final userId in widget.family.memberIds) {
+      _userAsyncData[userId] = Future.wait([
+        FirebaseFirestore.instance.collection('users').doc(userId).get(),
+        familyService.getCurrentUserRole(widget.family.id)
+      ]);
+    }
   }
 }

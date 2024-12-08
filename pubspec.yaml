@@ -50,6 +50,9 @@ dependencies:
   image_picker: ^1.1.2
   flutter_slidable: ^3.1.1
   quick_actions: ^1.0.8
+  flutter_local_notifications: ^18.0.1
+  flutter_launcher_icons: ^0.14.2
+  flutter_native_splash: ^2.4.3
 
 
 dev_dependencies:
@@ -62,6 +65,11 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
+
+flutter_icons:
+  image_path: "assets/icons/icon.png"
+  android: true
+  ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -83,7 +91,9 @@ flutter:
     - assets/illustrations/family.png
     - assets/illustrations/family_dark.png
     - assets/images/default_pfp.png
-
+    - assets/icons/icon.png
+    - icons/splash_screen.png
+    
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
@@ -107,3 +117,4 @@ flutter:
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
