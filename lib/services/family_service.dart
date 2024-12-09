@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
 
 import 'package:family_center/models/family.dart';
-import 'package:family_center/notifications/notification_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 enum FamilyRole {
@@ -146,55 +145,50 @@ class FamilyService {
   }
 
   Future<void> requestToJoinFamily(String joinCode, String userId, String requesterName) async {
-  final querySnapshot = await _firestore
-    .collection('families')
-    .where('joinCode', isEqualTo: joinCode)
-    .get();
+    final querySnapshot = await _firestore
+      .collection('families')
+      .where('joinCode', isEqualTo: joinCode)
+      .get();
 
-  if (querySnapshot.docs.isEmpty) {
-    throw Exception('Family not found');
+    if (querySnapshot.docs.isEmpty) {
+      throw Exception('Family not found');
+    }
+
+    final familyDoc = querySnapshot.docs.first;
+    
+    // Check existing request
+    final existingRequest = await _firestore
+      .collection('joinRequests')
+      .where('familyId', isEqualTo: familyDoc.id)
+      .where('userId', isEqualTo: userId)
+      .where('status', isEqualTo: 'pending')
+      .get();
+
+    if (existingRequest.docs.isNotEmpty) {
+      throw Exception('Already requested to join this family');
+    }
+
+    // Create request
+    final requestRef = await _firestore.collection('joinRequests').add({
+      'familyId': familyDoc.id,
+      'userId': userId,
+      'status': 'pending',
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+
+    // Create in-app notification document
+    await _firestore.collection('inAppNotifications').add({
+      'recipientId': familyDoc.data()['ownerId'],
+      'type': 'join_request',
+      'title': 'New Join Request',
+      'message': '$requesterName wants to join your family',
+      'read': false,
+      'timestamp': FieldValue.serverTimestamp(),
+      'familyId': familyDoc.id,
+      'requesterId': userId
+    });
+
+    // Show local notification
+    // TODO: SHOW THE LOCAL NOTIFICATION
   }
-
-  final familyDoc = querySnapshot.docs.first;
-  
-  // Check existing request
-  final existingRequest = await _firestore
-    .collection('joinRequests')
-    .where('familyId', isEqualTo: familyDoc.id)
-    .where('userId', isEqualTo: userId)
-    .where('status', isEqualTo: 'pending')
-    .get();
-
-  if (existingRequest.docs.isNotEmpty) {
-    throw Exception('Already requested to join this family');
-  }
-
-  // Create request
-  final requestRef = await _firestore.collection('joinRequests').add({
-    'familyId': familyDoc.id,
-    'userId': userId,
-    'status': 'pending',
-    'timestamp': FieldValue.serverTimestamp(),
-  });
-
-  // Create in-app notification document
-  await _firestore.collection('inAppNotifications').add({
-    'recipientId': familyDoc.data()['ownerId'],
-    'type': 'join_request',
-    'title': 'New Join Request',
-    'message': '$requesterName wants to join your family',
-    'read': false,
-    'timestamp': FieldValue.serverTimestamp(),
-    'familyId': familyDoc.id,
-    'requesterId': userId
-  });
-
-  // Show local notification
-  final notificationService = NotificationService();
-  await notificationService.showJoinRequestNotification(
-    title: 'New Join Request',
-    body: '$requesterName wants to join your family',
-    payload: requestRef.id,
-  );
-}
 }

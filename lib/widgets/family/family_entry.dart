@@ -31,6 +31,8 @@ class _FamilyEntryState extends ConsumerState<FamilyEntry> {
 
   @override
   Widget build(BuildContext context) {
+    const notificationAmount = 1;
+
     return Column(
       children: [
         InkWell(
@@ -45,29 +47,47 @@ class _FamilyEntryState extends ConsumerState<FamilyEntry> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      widget.family.name,
-                      style: Theme.of(context).textTheme.bodyMedium,
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Text(
+                          widget.family.name,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        notificationAmount > 0 ? Positioned(
+                          right: -25,
+                          top: -8,
+                          child: Container(
+                            padding: const EdgeInsets.all(3),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).highlightColor,
+                              shape: BoxShape.circle
+                            ),
+                            constraints: const BoxConstraints(
+                              minWidth: 20,
+                              minHeight: 20,
+                            ),
+                            child: Center(
+                              child: Text(
+                                notificationAmount.toString(),
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: MediaQuery.of(context).platformBrightness == Brightness.dark ? Colors.white : Colors.black
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ) : const SizedBox()
+                      ]
                     ),
                     Text(
                       widget.family.joinCode,
-                      style: Theme.of(context).textTheme.bodySmall
+                      style: Theme.of(context).textTheme.bodyMedium
                     ),
                   ]
                 ),
                 Row(
                   children: [
-                    Icon(
-                      isExpanded ? Icons.expand_less : Icons.expand_more,
-                      color: Theme.of(context).primaryIconTheme.color
-                    ),
-                    IconButton(
-                      onPressed: () async { },
-                      icon: Icon(
-                        Icons.settings,
-                        color: Theme.of(context).primaryIconTheme.color
-                      ),
-                    ),
                     IconButton(
                       onPressed: () async {
                         final familyProvider = ref.read(familyServiceProvider);
@@ -77,6 +97,17 @@ class _FamilyEntryState extends ConsumerState<FamilyEntry> {
                         Icons.exit_to_app,
                         color: Colors.redAccent
                       ),
+                    ),
+                    IconButton(
+                      onPressed: () async { },
+                      icon: Icon(
+                        Icons.settings,
+                        color: Theme.of(context).primaryIconTheme.color
+                      ),
+                    ),
+                    Icon(
+                      isExpanded ? Icons.expand_less : Icons.expand_more,
+                      color: Theme.of(context).primaryIconTheme.color
                     ),
                   ],
                 )

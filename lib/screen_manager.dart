@@ -8,7 +8,6 @@ import 'package:family_center/screens/personal_info_screen.dart';
 import 'package:family_center/screens/settings_screen.dart';
 import 'package:family_center/screens/user_profile_screen.dart';
 import 'package:family_center/widgets/layout/app_bar.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,7 +21,7 @@ class ScreenManager extends ConsumerStatefulWidget {
 
 class _ScreenManagerState extends ConsumerState<ConsumerStatefulWidget> {
   final PageController _pageController = PageController();
-  final double _dragThreshold = 0.7;
+  final double _dragThreshold = 0.1;
   
   int _currentPage = 0;
   double _dragStartX = 0;

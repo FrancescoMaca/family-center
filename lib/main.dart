@@ -1,5 +1,5 @@
 import 'package:family_center/extensions/theme_ext.dart';
-import 'package:family_center/notifications/notification_service.dart';
+// import 'package:family_center/notifications/notification_service.dart';
 import 'package:family_center/screen_manager.dart';
 import 'package:family_center/themes/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -28,8 +28,8 @@ void main() async {
   });
 
   // In-App Notifications
-  final notificationService = NotificationService();
-  await notificationService.initialize();
+  // final notificationService = NotificationService();
+  // await notificationService.initialize();
 
   runApp(const ProviderScope(child: MyApp()));
 }

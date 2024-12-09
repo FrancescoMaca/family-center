@@ -327,7 +327,7 @@ class _HomeScreenState extends ConsumerState<ConsumerStatefulWidget> {
     try {
       final String userId = FirebaseAuth.instance.currentUser!.uid;
 
-      await familyService.requestToJoinFamily(familyCode, userId, "Franco");
+      await familyService.requestToJoinFamily(familyCode, userId, "Username");
 
       if (mounted) {
         FancySnackbar.showSnackbar(

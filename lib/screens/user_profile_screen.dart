@@ -3,7 +3,9 @@ import 'package:family_center/providers/auth_provider.dart';
 import 'package:family_center/providers/user_provider.dart';
 import 'package:family_center/screens/edit_personal_info_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:share_plus/share_plus.dart';
 
 class UserProfileScreen extends ConsumerStatefulWidget {
   const UserProfileScreen({super.key});
@@ -41,7 +43,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
             children: [
               _createProfileSection(),
               _createEntry('Privacy', Icons.privacy_tip_rounded, () {}),
-              _createEntry('Invite a Friend', Icons.offline_bolt_rounded, () {}),
+              _createEntry('Invite a Friend', Icons.offline_bolt_rounded, handleShareApp),
               _createEntry('Sign out', Icons.exit_to_app_rounded, handleLogOut, true),
             ],
           ),
@@ -111,11 +113,14 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
       child: ElevatedButton(
         onPressed: onClick,
         style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
+          overlayColor: WidgetStatePropertyAll(isOutlined ? Colors.red.withAlpha(100) : Theme.of(context).highlightColor),
           backgroundColor: isOutlined ? const WidgetStatePropertyAll(Colors.transparent) : Theme.of(context).elevatedButtonTheme.style?.backgroundColor,
-          side: WidgetStatePropertyAll(BorderSide(
-            width: 3,
-            color: isOutlined ? Colors.redAccent : Colors.transparent
-          )),
+          side: WidgetStatePropertyAll(
+            BorderSide(
+              width: 3,
+              color: isOutlined ? Colors.redAccent : Colors.transparent
+            )
+          ),
           padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(vertical: 5, horizontal: 10))
         ),
         child: Padding(
@@ -146,5 +151,12 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
 
   void handleLogOut() {
     ref.read(authProvider.notifier).signOut();
+  }
+
+  void handleShareApp() {
+    Share.share(
+      'Hey you! Check out this great application that https://swondi.com just created! This app allows you to create a unite space with members of your family, so everyone can be updated at the same time.',
+      subject: 'Share Family Center with everyone!'
+    );
   }
 }
