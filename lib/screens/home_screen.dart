@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:family_center/providers/family_provider.dart';
 import 'package:family_center/services/family_service.dart';
-import 'package:family_center/services/user_service.dart';
 import 'package:family_center/themes/theme.dart';
 import 'package:family_center/utils/family_code_utils.dart';
 import 'package:family_center/widgets/family/family_entry.dart';
