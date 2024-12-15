@@ -6,5 +6,7 @@ class NotificationService {
     
   }
 
-  Future<void> markNotification()
+  Future<void> markNotification() async {
+
+  }
 }
