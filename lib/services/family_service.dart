@@ -145,6 +145,7 @@ class FamilyService {
   }
 
   Future<void> requestToJoinFamily(String joinCode, String userId, String requesterName) async {
+
     final querySnapshot = await _firestore
       .collection('families')
       .where('joinCode', isEqualTo: joinCode)
@@ -158,7 +159,7 @@ class FamilyService {
     
     // Check existing request
     final existingRequest = await _firestore
-      .collection('joinRequests')
+      .collection('join-requests')
       .where('familyId', isEqualTo: familyDoc.id)
       .where('userId', isEqualTo: userId)
       .where('status', isEqualTo: 'pending')
@@ -169,7 +170,7 @@ class FamilyService {
     }
 
     // Create request
-    final requestRef = await _firestore.collection('joinRequests').add({
+    final requestRef = await _firestore.collection('join-requests').add({
       'familyId': familyDoc.id,
       'userId': userId,
       'status': 'pending',
@@ -177,7 +178,7 @@ class FamilyService {
     });
 
     // Create in-app notification document
-    await _firestore.collection('inAppNotifications').add({
+    await _firestore.collection('in-app-notifications').add({
       'recipientId': familyDoc.data()['ownerId'],
       'type': 'join_request',
       'title': 'New Join Request',
